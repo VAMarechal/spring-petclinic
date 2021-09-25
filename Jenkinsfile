@@ -1,11 +1,11 @@
 pipeline { 
     agent any 
-     }
+    def mvnHome
     stages {
         stage('Build') {
             steps { 
                 echo "--------Building ---------------------"
-                def mvnHome
+                
                 mvnHome = tool 'maven-3.8.2'
                                 
 //                mvnHome = tool 'maven-3.8.2'
