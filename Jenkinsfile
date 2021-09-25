@@ -33,7 +33,8 @@ pipeline {
             steps {
                 echo "--------Create Artifact-----------------"
                 sh "docker build -t spring_petclinic:${BUILD_NUMBER} ."
-                    
+                sh "docker tag spring_petclinic:latest 18.191.142.161:8123/spring_petclinic:latest"    
+                sh "docker push 18.191.142.161:8123/spring_petclinic:latest"
             }
         }
         stage('Deploy'){
