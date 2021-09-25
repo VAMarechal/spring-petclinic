@@ -1,15 +1,15 @@
 pipeline { 
     agent any 
-    def mvnHome
+    
     stages {
         stage('Build') {
             steps { 
                 echo "--------Building ---------------------"
                 
-                mvnHome = tool 'maven-3.8.2'
+                // mvnHome = tool 'maven-3.8.2'
                                 
 //                mvnHome = tool 'maven-3.8.2'
-                sh "'${mvnHome}/bin/mvn' clean package"
+                sh "'/home/va/apache-maven-3.8.2/bin/mvn' clean package"
                 // Publish JUnit Report
                 junit '**/target/surefire-reports/TEST-*.xml'
 //                echo "Create Build folder..." 
