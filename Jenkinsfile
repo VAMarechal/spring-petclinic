@@ -9,12 +9,11 @@ pipeline {
         stage('Build') {
             steps { 
                 echo "--------Building ---------------------"
-                
                 echo "BUILD_NUMBER = ${BUILD_NUMBER}"
-                
                 echo "M2_HOME = ${M2_HOME}"
-                sh "'${M2_HOME}/bin/mvn' package"
-         //       sh "'${M2_HOME}/bin/mvn' clean package"
+                
+            //!    sh "'${M2_HOME}/bin/mvn' package"
+                // sh "'${M2_HOME}/bin/mvn' clean package"
                 // Publish JUnit Report
                 // junit '**/target/surefire-reports/TEST-*.xml'
                 
