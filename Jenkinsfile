@@ -4,7 +4,7 @@ pipeline {
         stage('Build') {
             steps { 
                 echo "--------Building ---------------------"
-                mvnHome = tool '/usr/share/maven'
+                mvnHome = tool '/home/va/apache-maven-3.8.2'
                 sh "'${mvnHome}/bin/mvn' clean package"
                 // Publish JUnit Report
                 junit '**/target/surefire-reports/TEST-*.xml'
