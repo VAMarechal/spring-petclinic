@@ -11,7 +11,7 @@ pipeline {
                 echo "--------Building ---------------------"
                 echo "M2_HOME = ${M2_HOME}"
                 
-                sh "'${M2_HOME}/bin/mvnw' package"
+                sh "'${M2_HOME}/bin/mvn' package"
          //       sh "'${M2_HOME}/bin/mvn' clean package"
                 // Publish JUnit Report
                 // junit '**/target/surefire-reports/TEST-*.xml'
