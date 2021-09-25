@@ -13,4 +13,4 @@ WORKDIR app
 
 CMD java -jar app/app.jar
 
-EXPOSE 8080
+EXPOSE 8082
