@@ -10,7 +10,6 @@ pipeline {
             steps { 
                 echo "--------Building ---------------------"
                 echo "M2_HOME = ${M2_HOME}"
-                M2_HOME = /home/va/apache-maven-3.8.2
                 
                 sh "'${M2_HOME}/bin/mvnw' package"
          //       sh "'${M2_HOME}/bin/mvn' clean package"
