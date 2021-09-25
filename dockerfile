@@ -7,10 +7,9 @@ RUN apt-get update && \
 
 # copy required  files
 RUN mkdir app
-COPY target/spring-petclinic-2.5.0-SNAPSHOT.jar app/app.jar
 
 WORKDIR app
 
-CMD java -jar app/app.jar
+CMD java -jar target/spring-petclinic-2.5.0-SNAPSHOT.jar
 
 EXPOSE 8082
