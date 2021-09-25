@@ -11,6 +11,7 @@ pipeline {
                 echo "--------Building ---------------------"
                 echo "BUILD_NUMBER = ${BUILD_NUMBER}"
                 echo "M2_HOME = ${M2_HOME}"
+                echo "$USER"
                 
             //!    sh "'${M2_HOME}/bin/mvn' package"
                 // sh "'${M2_HOME}/bin/mvn' clean package"
