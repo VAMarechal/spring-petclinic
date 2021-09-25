@@ -1,16 +1,18 @@
 pipeline { 
     agent any 
-    tools { 
-        maven 'maven-3.8.2' 
-        jdk 'java-8-openjdk-i386' 
-    }
+    // tools { 
+    //     maven 'maven-3.8.2' 
+    //     jdk 'java-8-openjdk-i386' 
+    // }
     
     stages {
         stage('Build') {
             steps { 
                 echo "--------Building ---------------------"
-                echo "M2_HOME = ${M2_HOME}"
                 
+                echo "BUILD_NUMBER = ${BUILD_NUMBER}"
+                
+                echo "M2_HOME = ${M2_HOME}"
                 sh "'${M2_HOME}/bin/mvn' package"
          //       sh "'${M2_HOME}/bin/mvn' clean package"
                 // Publish JUnit Report
