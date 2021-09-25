@@ -2,14 +2,12 @@ pipeline {
     agent any 
      }
     stages {
-    def mvnHome
-   stage('Preparation') {
-   // Get the Maven tool.This 'maven-demo' Maven tool must be configured in the global configuration.
-   mvnHome = tool 'maven-3.8.2'
-
         stage('Build') {
             steps { 
                 echo "--------Building ---------------------"
+                def mvnHome
+                mvnHome = tool 'maven-3.8.2'
+                                
 //                mvnHome = tool 'maven-3.8.2'
                 sh "'${mvnHome}/bin/mvn' clean package"
                 // Publish JUnit Report
