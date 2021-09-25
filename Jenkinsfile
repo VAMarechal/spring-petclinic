@@ -1,9 +1,9 @@
 pipeline { 
     agent any 
-    // tools { 
-    //     maven 'maven-3.8.2' 
-    //     jdk 'java-8-openjdk-i386' 
-    // }
+    tools { 
+        maven 'maven-3.8.2' 
+        jdk 'java-8-openjdk-i386' 
+    }
     
     stages {
         stage('Build') {
@@ -32,6 +32,8 @@ pipeline {
         stage('Create Artifact'){
             steps {
                 echo "--------Create Artifact-----------------"
+                sh "docker build -t spring_petclinic:${BUILD_NUMBER} ."
+                    
             }
         }
         stage('Deploy'){
