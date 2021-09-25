@@ -4,6 +4,10 @@ pipeline {
         stage('Build') {
             steps { 
                 echo "--------Building ---------------------"
+                mvnHome = tool '/usr/share/maven'
+                sh "'${mvnHome}/bin/mvn' clean package"
+                // Publish JUnit Report
+                junit '**/target/surefire-reports/TEST-*.xml'
 //                echo "Create Build folder..." 
 //                sh 'mkdir build'
 //                echo "Execute build script..." 
