@@ -5,17 +5,18 @@ pipeline {
         jdk 'java-8-openjdk-i386' 
     }
     
-   //  def mvnHome
-    // mvnHome = tool 'maven-3.8.2'
-    
     stages {
         stage('Build') {
             steps { 
-                echo "M2_HOME = ${M2_HOME}"
                 echo "--------Building ---------------------"
-          //      sh "'/home/va/apache-maven-3.8.2/bin/mvn' clean package"
+                echo "M2_HOME = ${M2_HOME}"
+                M2_HOME = /home/va/apache-maven-3.8.2
+                
+                sh "'${M2_HOME}/bin/mvnw' package"
+         //       sh "'${M2_HOME}/bin/mvn' clean package"
                 // Publish JUnit Report
-          //      junit '**/target/surefire-reports/TEST-*.xml'
+                // junit '**/target/surefire-reports/TEST-*.xml'
+                
 //                echo "Create Build folder..." 
 //                sh 'mkdir build'
 //                echo "Execute build script..." 
