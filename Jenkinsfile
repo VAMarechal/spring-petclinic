@@ -17,16 +17,6 @@ pipeline {
                 // sh "'${M2_HOME}/bin/mvn' clean package"
                 // Publish JUnit Report
                 // junit '**/target/surefire-reports/TEST-*.xml'
-                
-//                echo "Create Build folder..." 
-//                sh 'mkdir build'
-//                echo "Execute build script..." 
-//                sh "chmod +x -R ${env.WORKSPACE}"
-//                sh "./make.sh"
-//                echo "Script executed successfully!"
-//                echo "Copying ready site to Build folder" 
-//                sh 'cp -r img build'
-//                sh 'cp -r lib build'
             }
         }
         stage('Create Artifact'){
@@ -35,7 +25,7 @@ pipeline {
                 // sh "docker build -t spring_petclinic:${BUILD_NUMBER} ."
                 echo "--------Push to ACR-----------------"
                 script {
-                    docker.withReglstry(
+                    docker.withRegistry(
                         'https://313583066119.dkr.ecr.us-east-2.amazonaws.com',
                         'ecr:spring_petclinic:AWS_ECR'){
                          def mylmage = docker.bulld('spring_petclinic') 
