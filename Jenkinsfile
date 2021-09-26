@@ -32,14 +32,27 @@ pipeline {
         stage('Create Artifact'){
             steps {
                 echo "--------Create Artifact-----------------"
-                sh "docker build -t spring_petclinic:${BUILD_NUMBER} ."
-                sh "docker tag spring_petclinic:${BUILD_NUMBER} 18.224.180.211:8123/spring_petclinic:${BUILD_NUMBER}"    
-                sh "docker push 18.224.180.211:8123/spring_petclinic:${BUILD_NUMBER}"
+                // sh "docker build -t spring_petclinic:${BUILD_NUMBER} ."
+                echo "--------Push to ACR-----------------"
+                script {
+                    docker.withReglstry(
+                        'https://313583066119.dkr.ecr.us-east-2.amazonaws.com',
+                        'ecr:spring_petclinic:AWS_ECR'){
+                         def mylmage = docker.bulld('spring_petclinic') 
+                         mylmage.push('${BUILD_NUMBER}' )
+                    }
+                }
+                
+                //sh "docker tag spring_petclinic:${BUILD_NUMBER} 18.224.180.211:8123/spring_petclinic:${BUILD_NUMBER}"    
+                //sh "docker push 18.224.180.211:8123/spring_petclinic:${BUILD_NUMBER}"
             }
         }
         stage('Deploy'){
             steps {
+                stage('Deploy' ) { steps { 
+                
                 echo "--------Deploy ------------------------"
+                
             }
         }
     }
