@@ -22,8 +22,7 @@ pipeline {
         stage('Create Artifact'){
             steps {
                 echo "--------Create Artifact-----------------"
-                // sh "docker build -t 313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:${BUILD_NUMBER} ."
-                sh "docker build -t spring_petclinic:${BUILD_NUMBER} ."
+                sh "docker build -t 313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:${BUILD_NUMBER} ."
                 echo "--------Push to ACR-----------------"
                 script {
                     docker.withRegistry(
