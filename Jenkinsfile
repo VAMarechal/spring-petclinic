@@ -27,7 +27,7 @@ pipeline {
                 script {
                     docker.withRegistry(
                         'https://313583066119.dkr.ecr.us-east-2.amazonaws.com',
-                        'ecr:spring_petclinic:AWS_ECR'){
+                        'AWS_ECR'){
                          def mylmage = docker.bulld('spring_petclinic') 
                          mylmage.push('${BUILD_NUMBER}' )
                     }
