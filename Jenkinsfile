@@ -29,6 +29,7 @@ pipeline {
                 echo "BUILD_NUMBER = ${BUILD_NUMBER}"
                 echo "M2_HOME = ${M2_HOME}"
                 echo "$USER"
+                sh "apt-get install awscli"
                 
                //! sh "'${M2_HOME}/bin/mvn' package"
                 // sh "'${M2_HOME}/bin/mvn' clean package"
