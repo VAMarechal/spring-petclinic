@@ -56,7 +56,7 @@ pipeline {
         stage('Deploy in ECS') {
             steps {
               //  withCredentials([string(credentialsId: 'AWS_ECR', variable: 'AWS_ECS_EXECUTION_ROL')]) {
-                withAWS(credentials:'AWS_ECR')
+                withAWS(credentials:'AWS_ECR') {
                     script {
                         updateContainerDefinitionJsonWithImageVersion()
                         sh("/usr/local/bin/aws ecs register-task-definition --region ${AWS_ECR_REGION} --family ${AWS_ECS_TASK_DEFINITION} --requires-compatibilities ${AWS_ECS_COMPATIBILITY} --network-mode ${AWS_ECS_NETWORK_MODE} --cpu ${AWS_ECS_CPU} --memory ${AWS_ECS_MEMORY} --container-definitions file://${AWS_ECS_TASK_DEFINITION_PATH}")
