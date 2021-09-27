@@ -28,7 +28,7 @@ pipeline {
                 echo "M2_HOME = ${M2_HOME}"
                 echo "$USER"
                 
-                sh "'${M2_HOME}/bin/mvn' package"
+               //! sh "'${M2_HOME}/bin/mvn' package"
                 // sh "'${M2_HOME}/bin/mvn' clean package"
                 // Publish JUnit Report
                 // junit '**/target/surefire-reports/TEST-*.xml'
@@ -71,4 +71,11 @@ pipeline {
             }
         }
     }
+}
+
+def updateContainerDefinitionJsonWithImageVersion() {
+    def containerDefinitionJson = readJSON file: AWS_ECS_TASK_DEFINITION_PATH, returnPojo: true
+    containerDefinitionJson[0]['image'] = "${AWS_ECR_URL}:${BUILD_NUMBER}".inspect()
+    echo "task definiton json: ${containerDefinitionJson}"
+    writeJSON file: AWS_ECS_TASK_DEFINITION_PATH, json: containerDefinitionJson
 }
