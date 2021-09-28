@@ -44,7 +44,7 @@ pipeline {
                     def ecr_creds =  "ecr:${AWS_ECR_REGION}:AWS_ECR"
                     echo ecr_url
                     echo ecr_creds
-                    docker.withRegistry("htts://${AWS_ACCOUNT_ID}.${AWS_ECR_URL}", "ecr:${AWS_ECR_REGION}:AWS_ECR") {
+                    docker.withRegistry("https://${AWS_ACCOUNT_ID}.${AWS_ECR_URL}", "ecr:${AWS_ECR_REGION}:AWS_ECR") {
                          sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}"
                     }
                 }
