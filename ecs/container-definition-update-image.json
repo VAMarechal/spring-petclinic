@@ -5,7 +5,7 @@
         {
           "hostPort": 8080,
           "protocol": "tcp",
-          "containerPort": 80
+          "containerPort": 8080
         },
         {
           "hostPort": 8081,
