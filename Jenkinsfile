@@ -40,13 +40,9 @@ pipeline {
                 
                 echo "Push Docker Image to ECR"
                 script {
-                    def ecr_url = "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}"
-                    def ecr_creds =  "ecr:${AWS_ECR_REGION}:AWS_ECR"
-                    echo ecr_url
-                    echo ecr_creds
                     docker.withRegistry("https://${AWS_ACCOUNT_ID}.${AWS_ECR_URL}", "ecr:${AWS_ECR_REGION}:AWS_ECR") {
                          //sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}"
-                        sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:8"
+                        sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:8" //!!!! ${BUILD_NUMBER}
                     }
                 }
             }
@@ -69,8 +65,6 @@ pipeline {
                            '''
                         echo "Describing ECS Task Definition"
                         def taskRevision = sh(script: "/usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION} --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/.\$//'", returnStdout: true)
-                       
-                        // sh("${taskRevision}")
                         
                         echo "Updating ECS Service"
                         sh("/usr/bin/aws ecs update-service --cluster ${AWS_ECS_CLUSTER} --service ${APPLICATION_NAME} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
@@ -85,7 +79,7 @@ pipeline {
 def updateContainerDefinitionJsonWithImageVersion() {
     def containerDefinitionJson = readJSON file: AWS_ECS_TASK_DEFINITION_PATH, returnPojo: true
     //!containerDefinitionJson[0]['image'] = "${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}".inspect()
-    containerDefinitionJson[0]['image'] = "${AWS_ECR_URL}/${APPLICATION_NAME}:8".inspect()
+    containerDefinitionJson[0]['image'] = "${AWS_ECR_URL}/${APPLICATION_NAME}:8".inspect() //!!!! ${BUILD_NUMBER}
     echo "task definiton json: ${containerDefinitionJson}"
     writeJSON file: AWS_ECS_TASK_DEFINITION_PATH, json: containerDefinitionJson
 }
