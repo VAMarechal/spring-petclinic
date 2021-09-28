@@ -30,18 +30,16 @@ pipeline {
                 echo "--------Building Sprint-PetClinic application---------------------"
                 echo "BUILD_NUMBER = ${BUILD_NUMBER}"
                 echo "M2_HOME = ${M2_HOME}"                               
-                sh "'${M2_HOME}/bin/mvn' package"
+            //!    sh "'${M2_HOME}/bin/mvn' package"
             }
         }
         stage('Create Artifact'){
             steps {
                 echo "--------Create Docker Artifact-----------------"
-                sh "docker build -t ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER} ."
+              //!  sh "docker build -t ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER} ."
                 
                 echo "Push Docker Image to ECR"
                 script {
-                    def ecr_url = '${AWS_ACCOUNT_ID}.${AWS_ECR_URL}'
-                    def ecr_creds = 'ecr:${AWS_ECR_REGION}:AWS_ECR' 
                     docker.withRegistry('${AWS_ACCOUNT_ID}.${AWS_ECR_URL}', 'ecr:${AWS_ECR_REGION}:AWS_ECR') {
                          sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}"
                     }
