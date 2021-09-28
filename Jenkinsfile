@@ -45,7 +45,7 @@ pipeline {
                     docker.withRegistry(
                         'https://313583066119.dkr.ecr.us-east-2.amazonaws.com',
                         'ecr:us-east-2:AWS_ECR' ) {
-                     //   sh "docker push 313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:${BUILD_NUMBER}"
+                        sh "docker push 313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:${BUILD_NUMBER}"
                         // def mylmage = docker.bulld('spring_petclinic') 
                         // mylmage.push('${BUILD_NUMBER}' )
                     }
@@ -63,10 +63,10 @@ pipeline {
                         def taskRevision = sh(script: "/usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION} --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/\"\$//'", returnStdout: true)
                         
                         sh("echo ${taskRevision}")
-                        sh("sleep 30")
+                        // sh("sleep 30")
                         
-                        sh("/usr/bin/aws ecs update-service --cluster ${AWS_ECS_CLUSTER} --service ${AWS_ECS_SERVICE} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
-                        //sh("/usr/bin/aws ecs update-service --cluster ${AWS_ECS_CLUSTER} --service ${AWS_ECS_SERVICE} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:9")
+                        //sh("/usr/bin/aws ecs update-service --cluster ${AWS_ECS_CLUSTER} --service ${AWS_ECS_SERVICE} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
+                        //sh("/usr/bin/aws ecs update-service --cluster ${AWS_ECS_CLUSTER} --service ${AWS_ECS_SERVICE} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:11")
                     }
                 }
             }
@@ -83,7 +83,7 @@ pipeline {
 
 def updateContainerDefinitionJsonWithImageVersion() {
     def containerDefinitionJson = readJSON file: AWS_ECS_TASK_DEFINITION_PATH, returnPojo: true
-    containerDefinitionJson[0]['image'] = "${AWS_ECR_URL}:2".inspect()
+    containerDefinitionJson[0]['image'] = "${AWS_ECR_URL}:${BUILD_NUMBER}".inspect()
     echo "task definiton json: ${containerDefinitionJson}"
     writeJSON file: AWS_ECS_TASK_DEFINITION_PATH, json: containerDefinitionJson
 }
