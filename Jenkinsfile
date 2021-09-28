@@ -12,7 +12,7 @@ pipeline {
      environment {
         APPLICATION_NAME = 'spring_petclinic'
         AWS_ACCOUNT_ID = '313583066119'
-        AWS_ECR_URL = 'dkr.ecr.us-east-2.amazonaws.com/'
+        AWS_ECR_URL = 'dkr.ecr.us-east-2.amazonaws.com'
         AWS_ECS_EXECUTION_ROLE = 'arn:aws:iam::313583066119:role/ecsTaskExecutionRole'
         AWS_ECR_REGION = 'us-east-2'
         AWS_ECS_TASK_DEFINITION  = 'spc-taskdefinition'
@@ -36,7 +36,8 @@ pipeline {
         stage('Create Artifact'){
             steps {
                 echo "--------Create Docker Artifact-----------------"
-                sh "docker build -t ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER} ."
+                sh "docker build -t ${AWS_ACCOUNT_ID}.${
+            }/${APPLICATION_NAME}:${BUILD_NUMBER} ."
                 
                 echo "Push Docker Image to ECR"
                 script {
@@ -83,7 +84,7 @@ pipeline {
 
 def updateContainerDefinitionJsonWithImageVersion() {
     def containerDefinitionJson = readJSON file: AWS_ECS_TASK_DEFINITION_PATH, returnPojo: true
-    containerDefinitionJson[0]['image'] = "${AWS_ECR_URL}:30".inspect()
+    containerDefinitionJson[0]['image'] = "${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}".inspect()
     echo "task definiton json: ${containerDefinitionJson}"
     writeJSON file: AWS_ECS_TASK_DEFINITION_PATH, json: containerDefinitionJson
 }
