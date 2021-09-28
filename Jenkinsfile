@@ -39,7 +39,9 @@ pipeline {
                 sh "docker build -t ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER} ."
                 
                 echo "Push Docker Image to ECR"
-                docker.withRegistry('${AWS_ACCOUNT_ID}.${AWS_ECR_URL}', 'ecr:${AWS_ECR_REGION}:AWS_ECR' ) {
+                def ecr_url = '${AWS_ACCOUNT_ID}.${AWS_ECR_URL}'
+                def ecr_creds = 'ecr:${AWS_ECR_REGION}:AWS_ECR' 
+                docker.withRegistry(ecr_url, ecr_creds) {
                      sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}"
                 }
             }
@@ -60,11 +62,7 @@ pipeline {
                                                                     --container-definitions file://${AWS_ECS_TASK_DEFINITION_PATH}
                        '''
                     echo "Describing ECS Task Definition"
-                    def taskRevision = sh (script: ''' /usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION}] 
-                                                                                    --region ${AWS_ECR_REGION} 
-                                                                                    | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' 
-                                                                                    | sed 's/.\$//'
-                                            ''', returnStdout: true)
+                    def taskRevision = sh (script: " /usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION}] --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/.\$//'", returnStdout: true)
                     echo "Updating ECS Service"
                     sh '''
                         /usr/bin/aws ecs update-service --cluster ${AWS_ECS_CLUSTER}
