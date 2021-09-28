@@ -36,8 +36,7 @@ pipeline {
         stage('Create Artifact'){
             steps {
                 echo "--------Create Docker Artifact-----------------"
-                sh "docker build -t ${AWS_ACCOUNT_ID}.${
-            }/${APPLICATION_NAME}:${BUILD_NUMBER} ."
+                sh "docker build -t ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER} ."
                 
                 echo "Push Docker Image to ECR"
                 script {
