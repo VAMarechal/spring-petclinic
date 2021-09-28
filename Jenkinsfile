@@ -15,7 +15,7 @@ pipeline {
         AWS_ECR_URL = 'dkr.ecr.us-east-2.amazonaws.com/'
         AWS_ECS_EXECUTION_ROLE = 'arn:aws:iam::313583066119:role/ecsTaskExecutionRole'
         AWS_ECR_REGION = 'us-east-2'
-        AWS_ECS_TASK_DEFINITION  'spc-taskdefinition'
+        AWS_ECS_TASK_DEFINITION  = 'spc-taskdefinition'
         AWS_ECS_COMPATIBILITY = 'FARGATE'
         AWS_ECS_NETWORK_MODE = 'awsvpc'
         AWS_ECS_CPU = '256'
