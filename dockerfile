@@ -12,4 +12,5 @@ RUN apt-get update && \
 COPY target/spring-petclinic-2.5.0-SNAPSHOT.jar app.jar
 CMD java -jar /app.jar
 
-EXPOSE 8080
+# EXPOSE 8080
+EXPOSE 80
