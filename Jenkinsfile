@@ -39,8 +39,8 @@ pipeline {
                 sh "docker build -t ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER} ."
                 
                 echo "Push Docker Image to ECR"
-                def ecr_url = '${AWS_ACCOUNT_ID}.${AWS_ECR_URL}'
-                def ecr_creds = 'ecr:${AWS_ECR_REGION}:AWS_ECR' 
+                var ecr_url = '${AWS_ACCOUNT_ID}.${AWS_ECR_URL}'
+                var ecr_creds = 'ecr:${AWS_ECR_REGION}:AWS_ECR' 
                 docker.withRegistry(ecr_url, ecr_creds) {
                      sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}"
                 }
