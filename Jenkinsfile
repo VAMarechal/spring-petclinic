@@ -45,7 +45,8 @@ pipeline {
                     echo ecr_url
                     echo ecr_creds
                     docker.withRegistry("https://${AWS_ACCOUNT_ID}.${AWS_ECR_URL}", "ecr:${AWS_ECR_REGION}:AWS_ECR") {
-                         sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}"
+                         //sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}"
+                        sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:8"
                     }
                 }
             }
@@ -85,7 +86,8 @@ pipeline {
 
 def updateContainerDefinitionJsonWithImageVersion() {
     def containerDefinitionJson = readJSON file: AWS_ECS_TASK_DEFINITION_PATH, returnPojo: true
-    containerDefinitionJson[0]['image'] = "${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}".inspect()
+    //!containerDefinitionJson[0]['image'] = "${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}".inspect()
+    containerDefinitionJson[0]['image'] = "${AWS_ECR_URL}/${APPLICATION_NAME}:8".inspect()
     echo "task definiton json: ${containerDefinitionJson}"
     writeJSON file: AWS_ECS_TASK_DEFINITION_PATH, json: containerDefinitionJson
 }
