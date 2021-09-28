@@ -68,7 +68,10 @@ pipeline {
                                                                         --container-definitions file://${AWS_ECS_TASK_DEFINITION_PATH}
                            '''
                         echo "Describing ECS Task Definition"
-                        def taskRevision = sh (script: " /usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION}] --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/.\$//'", returnStdout: true)
+                        def taskRevision = sh (script: "/usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION}] --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/.\$//'", returnStdout: true)
+                        
+                        sh("${taskRevision}")
+                        
                         echo "Updating ECS Service"
                         sh '''
                             /usr/bin/aws ecs update-service --cluster ${AWS_ECS_CLUSTER} \
