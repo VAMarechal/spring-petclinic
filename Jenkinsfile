@@ -39,10 +39,12 @@ pipeline {
                 sh "docker build -t ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER} ."
                 
                 echo "Push Docker Image to ECR"
-                var ecr_url = '${AWS_ACCOUNT_ID}.${AWS_ECR_URL}'
-                var ecr_creds = 'ecr:${AWS_ECR_REGION}:AWS_ECR' 
-                docker.withRegistry(ecr_url, ecr_creds) {
-                     sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}"
+                script {
+                    var ecr_url = '${AWS_ACCOUNT_ID}.${AWS_ECR_URL}'
+                    var ecr_creds = 'ecr:${AWS_ECR_REGION}:AWS_ECR' 
+                    docker.withRegistry('${AWS_ACCOUNT_ID}.${AWS_ECR_URL}', 'ecr:${AWS_ECR_REGION}:AWS_ECR') {
+                         sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}"
+                    }
                 }
             }
         }        
@@ -50,27 +52,29 @@ pipeline {
             steps {
                 echo "--------Deploying Docker Image from ECR to ECS cluster-----------------"
                 withAWS(credentials:'AWS_ECR') {
-                    updateContainerDefinitionJsonWithImageVersion()
-                    echo "Registering ECS Task Definition"
-                    sh '''/usr/bin/aws ecs register-task-definition --region ${AWS_ECR_REGION} 
-                                                                    --family ${AWS_ECS_TASK_DEFINITION} 
-                                                                    --execution-role-arn ${AWS_ECS_EXECUTION_ROLE} 
-                                                                    --requires-compatibilities ${AWS_ECS_COMPATIBILITY} 
-                                                                    --network-mode ${AWS_ECS_NETWORK_MODE} 
-                                                                    --cpu ${AWS_ECS_CPU} 
-                                                                    --memory ${AWS_ECS_MEMORY} 
-                                                                    --container-definitions file://${AWS_ECS_TASK_DEFINITION_PATH}
-                       '''
-                    echo "Describing ECS Task Definition"
-                    def taskRevision = sh (script: " /usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION}] --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/.\$//'", returnStdout: true)
-                    echo "Updating ECS Service"
-                    sh '''
-                        /usr/bin/aws ecs update-service --cluster ${AWS_ECS_CLUSTER}
-                                                    --service ${APPLICATION_NAME} 
-                                                    --region ${AWS_ECR_REGION} 
-                                                    --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}
-                     '''
-                    echo "Completed"
+                    script {
+                        updateContainerDefinitionJsonWithImageVersion()
+                        echo "Registering ECS Task Definition"
+                        sh '''/usr/bin/aws ecs register-task-definition --region ${AWS_ECR_REGION} 
+                                                                        --family ${AWS_ECS_TASK_DEFINITION} 
+                                                                        --execution-role-arn ${AWS_ECS_EXECUTION_ROLE} 
+                                                                        --requires-compatibilities ${AWS_ECS_COMPATIBILITY} 
+                                                                        --network-mode ${AWS_ECS_NETWORK_MODE} 
+                                                                        --cpu ${AWS_ECS_CPU} 
+                                                                        --memory ${AWS_ECS_MEMORY} 
+                                                                        --container-definitions file://${AWS_ECS_TASK_DEFINITION_PATH}
+                           '''
+                        echo "Describing ECS Task Definition"
+                        def taskRevision = sh (script: " /usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION}] --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/.\$//'", returnStdout: true)
+                        echo "Updating ECS Service"
+                        sh '''
+                            /usr/bin/aws ecs update-service --cluster ${AWS_ECS_CLUSTER}
+                                                        --service ${APPLICATION_NAME} 
+                                                        --region ${AWS_ECR_REGION} 
+                                                        --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}
+                         '''
+                        echo "Completed"
+                    }
                 }
             }
         }               
