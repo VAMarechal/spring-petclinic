@@ -7,7 +7,7 @@
           "protocol": "tcp",
           "containerPort": 8080
         },
-        {
+       {
           "hostPort": 8081,
           "protocol": "tcp",
           "containerPort": 8081
@@ -28,6 +28,6 @@
       "image": "",
       
       "essential": true,
-      "name": "userApi"
+      "name": "spring_petclinic"
     }
 ]
