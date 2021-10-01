@@ -4,8 +4,8 @@ pipeline {
     stages {
         stage('Hello') {
             steps {
-                echo ${params.Stored_images}
-                echo ${Stored_images}
+                echo "${params.Stored_images}"
+                echo "${Stored_images}"
             }
         }
     }
