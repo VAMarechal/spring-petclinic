@@ -34,6 +34,7 @@ pipeline {
             }
         }
         stage('Create Artifact'){
+            when { expression { BRANCH_NAME == 'dev' || BRANCH_NAME == 'main' } }
             steps {
                 echo "--------Create Docker Artifact-----------------"
               //!  sh "docker build -t ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER} ."
@@ -48,6 +49,7 @@ pipeline {
             }
         }        
         stage('Deploy in ECS') {
+            when { expression { BRANCH_NAME == 'dev' || BRANCH_NAME == 'main' } }
             steps {
                 echo "--------Deploying Docker Image from ECR to ECS cluster-----------------"
                 withAWS(credentials:'AWS_ECR') {
@@ -76,3 +78,5 @@ def updateContainerDefinitionJsonWithImageVersion() {
     echo "task definiton json: ${containerDefinitionJson}"
     writeJSON file: AWS_ECS_TASK_DEFINITION_PATH, json: containerDefinitionJson
 }
+
+
