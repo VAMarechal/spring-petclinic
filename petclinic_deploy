@@ -4,6 +4,8 @@ pipeline {
     stages {
         stage('Hello') {
             steps {
+                echo "${BRANCH_NAME}"
+                // env.BRANCH_NAME
                 echo "${params.selected_image}"
                 echo "${selected_image}"
             }
