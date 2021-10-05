@@ -29,11 +29,6 @@ pipeline {
         stage('Deploy in ECS') {
             steps {
                 echo "--------Deploying Docker Image from ECR to ECS cluster-----------------"
-                
-             ${AWS_ECR_CLUSTER}
-             ${AWS_ECR_SERVICE}
-
-                
                 withAWS(credentials:'AWS_ECR') {
                     script {
                         updateContainerDefinitionJsonWithImageVersion()
