@@ -13,24 +13,8 @@ pipeline {
          APPLICATION_NAME = 'spring_petclinic'
          AWS_ACCOUNT_ID = '313583066119'
          AWS_ECR_URL = 'dkr.ecr.us-east-2.amazonaws.com'
-         AWS_ECS_EXECUTION_ROLE = 'arn:aws:iam::313583066119:role/ecsTaskExecutionRole'
          AWS_ECR_REGION = 'us-east-2'
-         AWS_ECS_COMPATIBILITY = 'FARGATE'
-         AWS_ECS_NETWORK_MODE = 'awsvpc'
-         AWS_ECS_CPU = '256'
-         AWS_ECS_MEMORY = '512'
-         AWS_ECS_TASK_DEFINITION_PATH = './ecs/container-definition-update-image.json'
          
-         AWS_ECS_CLUSTER = 'pet-dev-cluster'
-         AWS_ECR_SERVICE = 'pet-dev-Service'
-          // = ${var.stack}-service
-         AWS_ECS_TASK_DEFINITION  = 'petclinic'
-           // =  petclinic:6 = ${var.family}
-        // AWS_ECR_REGION = aws_region
-        // AWS_ECS_CPU = fargate_cpu
-        // AWS_ECS_MEMORY = fargate_memory
-        // AWS_ECS_NETWORK_MODE = requires_compatibilities
-        // AWS_ECS_COMPATIBILITY = requires_compatibilities
     }
    
     stages {
@@ -67,34 +51,7 @@ pipeline {
                     string(name: 'selected_image', value: "${BRANCH_NAME}_${BUILD_NUMBER}"),
                     string(name: 'AWS_ECS_CLUSTER', value: "pet-${BRANCH_NAME}-cluster")
                 ]
-
-                
-                
-               // withAWS(credentials:'AWS_ECR') {
-               //     script {
-               //         updateContainerDefinitionJsonWithImageVersion()
-               //         echo "Registering ECS Task Definition"
-               //         sh("/usr/bin/aws ecs register-task-definition --region ${AWS_ECR_REGION} --family ${AWS_ECS_TASK_DEFINITION} --execution-role-arn ${AWS_ECS_EXECUTION_ROLE} --requires-compatibilities ${AWS_ECS_COMPATIBILITY} --network-mode ${AWS_ECS_NETWORK_MODE} --cpu ${AWS_ECS_CPU} --memory ${AWS_ECS_MEMORY} --container-definitions file://${AWS_ECS_TASK_DEFINITION_PATH}")
-               //           
-               //         echo "Describing ECS Task Definition"
-               //         def taskRevision = sh(script: "/usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION} --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/.\$//'", returnStdout: true)
-               //         
-               //         echo "Updating ECS Service"
-               //         sh("/usr/bin/aws ecs update-service --cluster ${AWS_ECS_CLUSTER} --service ${APPLICATION_NAME} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
-               //         echo "Completed"
-               //     }
-               // }
             }
         }               
     }
 }
-
-//def updateContainerDefinitionJsonWithImageVersion() {
-//    def containerDefinitionJson = readJSON file: AWS_ECS_TASK_DEFINITION_PATH, returnPojo: true
-//    //!containerDefinitionJson[0]['image'] = "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BRANCH_NAME}_${BUILD_NUMBER}".inspect()
-//    containerDefinitionJson[0]['image'] = "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:8".inspect() //!!!! ${BRANCH_NAME}_${BUILD_NUMBER}
-//    echo "task definiton json: ${containerDefinitionJson}"
-//    writeJSON file: AWS_ECS_TASK_DEFINITION_PATH, json: containerDefinitionJson
-//}
-
-
