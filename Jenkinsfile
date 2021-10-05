@@ -48,7 +48,7 @@ pipeline {
                 echo "--------Deploying Docker Image from ECR to ECS cluster-----------------"
                 build job: 'Spring Pet Clinic - Deploy', parameters: [                                     
                     string(name: 'selected_image', value: "${BRANCH_NAME}_${BUILD_NUMBER}"),
-                    string(name: 'branch_name', value: "{BRANCH_NAME}")
+                    string(name: 'branch_name', value: "${BRANCH_NAME}")
                 ]
             }
         }               
