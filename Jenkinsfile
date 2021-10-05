@@ -21,8 +21,9 @@ pipeline {
             steps { 
                 echo "--------Building Sprint-PetClinic application---------------------"
                 echo "TAG= ${BRANCH_NAME}_${BUILD_NUMBER}"
-                // echo "M2_HOME = ${M2_HOME}"                               
-                sh "'${M2_HOME}/bin/mvn' package"
+                // echo "M2_HOME = ${M2_HOME}"
+                 sh "'${M2_HOME}/bin/mvn' package -DskipTests" 
+                // sh "'${M2_HOME}/bin/mvn' package"
             }
         }
         stage('Create Artifact'){
