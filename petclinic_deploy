@@ -6,10 +6,10 @@ pipeline {
     options {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
-    parameters {[
+    parameters {
         // string(name: 'ecs_cluster', defaultValue: 'pet-dev-cluster', trim: true)
         string(name: 'ECS_CLUSTER', defaultValue: 'pet-dev-cluster', trim: true)
-    ]}
+    }
      environment {
         APPLICATION_NAME = 'spring_petclinic'
         AWS_ACCOUNT_ID = '313583066119'
