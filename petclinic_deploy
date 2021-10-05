@@ -2,7 +2,6 @@ pipeline {
     agent any
     tools { 
         jdk 'java-8-openjdk-i386'
-        terraform 'Terraform'  
     }
     
     options {
@@ -36,10 +35,8 @@ pipeline {
     }
     stages {
         stage('Deploy in ECS') {
-           // when { expression { BRANCH_NAME == 'dev' || BRANCH_NAME == 'main' } }
             steps {
                 echo "--------Deploying Docker Image from ECR to ECS cluster-----------------"
-                // echo env.BRANCH_NAME
                 echo "${params.selected_image}"
                 echo "${selected_image}"
 
@@ -66,7 +63,8 @@ pipeline {
 def updateContainerDefinitionJsonWithImageVersion() {
     def containerDefinitionJson = readJSON file: AWS_ECS_TASK_DEFINITION_PATH, returnPojo: true
     //!containerDefinitionJson[0]['image'] = "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}".inspect()
-    containerDefinitionJson[0]['image'] = "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:30".inspect() //!!!! ${BUILD_NUMBER}
+    //containerDefinitionJson[0]['image'] = "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:30".inspect() //!!!! ${BUILD_NUMBER}
+    containerDefinitionJson[0]['image'] = "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${selected_image}".inspect()
     echo "task definiton json: ${containerDefinitionJson}"
     writeJSON file: AWS_ECS_TASK_DEFINITION_PATH, json: containerDefinitionJson
 }
