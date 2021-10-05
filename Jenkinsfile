@@ -37,27 +37,26 @@ pipeline {
         stage('Build') {
             steps { 
                 echo "--------Building Sprint-PetClinic application---------------------"
-                echo "BUILD_NUMBER = ${BUILD_NUMBER}"
-                echo "BRANCH_NAME = ${BRANCH_NAME}"
-                echo "TAG= ${BRANCH_NAME}'_'${BUILD_NUMBER}"
-                // env.BRANCH_NAME
-                echo "M2_HOME = ${M2_HOME}"                               
-            //!    sh "'${M2_HOME}/bin/mvn' package"
+                echo "TAG= ${BRANCH_NAME}_${BUILD_NUMBER}"
+                // echo "M2_HOME = ${M2_HOME}"                               
+                sh "'${M2_HOME}/bin/mvn' package"
             }
         }
         stage('Create Artifact'){
             when { expression { BRANCH_NAME == 'dev' || BRANCH_NAME == 'main' } }
             steps {
                 echo "--------Create Docker Artifact-----------------"
-              //!  sh "docker build -t ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER} ."
+                sh "docker build -t ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BRANCH_NAME}_${BUILD_NUMBER} ."
                 
-                echo "Push Docker Image to ECR"
+                echo "--------Push Docker Image to ECR---------------"
                 script {
                     docker.withRegistry("https://${AWS_ACCOUNT_ID}.${AWS_ECR_URL}", "ecr:${AWS_ECR_REGION}:AWS_ECR") {
-                    //! sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}"
+                        sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BRANCH_NAME}_${BUILD_NUMBER}"
                    //!!     sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:8" //!!!! ${BUILD_NUMBER}
                     }
                 }
+                echo "--------Remove Local Docker Image -------------------"
+                sh "docker rmi -f ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BRANCH_NAME}_${BUILD_NUMBER}"
             }
         }        
         stage('Deploy in ECS') {
@@ -85,8 +84,8 @@ pipeline {
 
 //def updateContainerDefinitionJsonWithImageVersion() {
 //    def containerDefinitionJson = readJSON file: AWS_ECS_TASK_DEFINITION_PATH, returnPojo: true
-//    //!containerDefinitionJson[0]['image'] = "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BUILD_NUMBER}".inspect()
-//    containerDefinitionJson[0]['image'] = "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:8".inspect() //!!!! ${BUILD_NUMBER}
+//    //!containerDefinitionJson[0]['image'] = "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BRANCH_NAME}_${BUILD_NUMBER}".inspect()
+//    containerDefinitionJson[0]['image'] = "${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:8".inspect() //!!!! ${BRANCH_NAME}_${BUILD_NUMBER}
 //    echo "task definiton json: ${containerDefinitionJson}"
 //    writeJSON file: AWS_ECS_TASK_DEFINITION_PATH, json: containerDefinitionJson
 //}
