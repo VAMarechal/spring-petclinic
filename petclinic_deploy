@@ -40,6 +40,8 @@ pipeline {
                 echo "--------Deploying Docker Image from ECR to ECS cluster-----------------"
                 echo "${params.selected_image}"
                 echo "${selected_image}"
+                echo "${params.ecs_cluster}"
+                echo "${ecs_cluster}"
 
                 withAWS(credentials:'AWS_ECR') {
                     script {
@@ -51,7 +53,7 @@ pipeline {
                         def taskRevision = sh(script: "/usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION} --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/.\$//'", returnStdout: true)
                         
                         echo "Updating ECS Service"
-                        sh("/usr/bin/aws ecs update-service --cluster params.ecs_cluster --service ${AWS_ECR_SERVICE} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
+               //!         sh("/usr/bin/aws ecs update-service --cluster params.ecs_cluster --service ${AWS_ECR_SERVICE} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
                         echo "Completed"
                     }
                 }
