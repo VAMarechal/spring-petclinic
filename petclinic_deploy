@@ -7,10 +7,11 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
     parameters {
-        string(name: 'ecs_cluster', defaultValue: 'pet-dev-cluster', trim: true)
+        string(name: 'branch_name', defaultValue: 'dev', trim: true)
     }
      environment {
-        AWS_ECR_SERVICE = 'pet-dev-Service'
+        AWS_ECR_CLUSTER = 'pet-${branch_name}-cluster'
+        AWS_ECR_SERVICE = 'pet-${branch_name}-Service'
         AWS_ECS_TASK_DEFINITION  = 'petclinic'
         APPLICATION_NAME = 'spring_petclinic'
         AWS_ACCOUNT_ID = '313583066119'
