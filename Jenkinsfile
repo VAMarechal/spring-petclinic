@@ -76,7 +76,7 @@ pipeline {
                //         sh("/usr/bin/aws ecs update-service --cluster ${AWS_ECS_CLUSTER} --service ${APPLICATION_NAME} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
                //         echo "Completed"
                //     }
-                }
+               // }
             }
         }               
     }
