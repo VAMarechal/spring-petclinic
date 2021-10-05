@@ -39,6 +39,7 @@ pipeline {
                 echo "--------Building Sprint-PetClinic application---------------------"
                 echo "BUILD_NUMBER = ${BUILD_NUMBER}"
                 echo "BRANCH_NAME = ${BRANCH_NAME}"
+                echo "TAG= ${BRANCH_NAME}'_'${BUILD_NUMBER}"
                 // env.BRANCH_NAME
                 echo "M2_HOME = ${M2_HOME}"                               
             //!    sh "'${M2_HOME}/bin/mvn' package"
