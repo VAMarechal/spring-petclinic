@@ -7,7 +7,6 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
     parameters {
-        // string(name: 'ecs_cluster', defaultValue: 'pet-dev-cluster', trim: true)
         string(name: 'ECS_CLUSTER', defaultValue: 'pet-dev-cluster', trim: true)
     }
      environment {
