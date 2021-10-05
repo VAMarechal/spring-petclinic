@@ -38,7 +38,7 @@ pipeline {
             steps { 
                 echo "--------Building Sprint-PetClinic application---------------------"
                 echo "BUILD_NUMBER = ${BUILD_NUMBER}"
-                echo "BRANCH_NAME = ${BRANCH_NAME}
+                echo "BRANCH_NAME = ${BRANCH_NAME}"
                 // env.BRANCH_NAME
                 echo "M2_HOME = ${M2_HOME}"                               
             //!    sh "'${M2_HOME}/bin/mvn' package"
