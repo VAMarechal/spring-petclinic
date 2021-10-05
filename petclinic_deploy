@@ -7,7 +7,8 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
     parameters {[
-        string(name: 'ecs_cluster', defaultValue: 'pet-dev-cluster', trim: true)
+        // string(name: 'ecs_cluster', defaultValue: 'pet-dev-cluster', trim: true)
+        string(name: 'ECS_CLUSTER', defaultValue: 'pet-dev-cluster', trim: true)
     ]}
      environment {
         APPLICATION_NAME = 'spring_petclinic'
@@ -53,7 +54,8 @@ pipeline {
                         def taskRevision = sh(script: "/usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION} --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/.\$//'", returnStdout: true)
                         
                         echo "Updating ECS Service"
-                        sh("/usr/bin/aws ecs update-service --cluster ${ecs_cluster} --service ${AWS_ECR_SERVICE} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
+//                        sh("/usr/bin/aws ecs update-service --cluster ${ecs_cluster} --service ${AWS_ECR_SERVICE} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
+                        sh("/usr/bin/aws ecs update-service --cluster ${ECS_CLUSTER} --service ${AWS_ECR_SERVICE} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
                         echo "Completed"
                     }
                 }
