@@ -10,8 +10,8 @@ pipeline {
         string(name: 'branch_name', defaultValue: 'dev', trim: true)
     }
      environment {
-        AWS_ECR_CLUSTER = 'pet-${branch_name}-cluster'
-        AWS_ECR_SERVICE = 'pet-${branch_name}-Service'
+        AWS_ECR_CLUSTER = 'pet-${params.branch_name}-cluster'
+        AWS_ECR_SERVICE = 'pet-${params.branch_name}-Service'
         AWS_ECS_TASK_DEFINITION  = 'petclinic'
         APPLICATION_NAME = 'spring_petclinic'
         AWS_ACCOUNT_ID = '313583066119'
