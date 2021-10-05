@@ -14,7 +14,6 @@ pipeline {
          AWS_ACCOUNT_ID = '313583066119'
          AWS_ECR_URL = 'dkr.ecr.us-east-2.amazonaws.com'
          AWS_ECR_REGION = 'us-east-2'
-         
     }
    
     stages {
@@ -47,7 +46,7 @@ pipeline {
             steps {
                 echo "--------Deploying Docker Image from ECR to ECS cluster-----------------"
                 build job: 'Tect param out', parameters: [                                     
-//!                build job: 'Spring Pet Clinic - Deploy', parameters: [                                     
+//!!!                build job: 'Spring Pet Clinic - Deploy', parameters: [                                     
                     string(name: 'selected_image', value: "${BRANCH_NAME}_${BUILD_NUMBER}"),
                     string(name: 'AWS_ECS_CLUSTER', value: "pet-${BRANCH_NAME}-cluster")
                 ]
