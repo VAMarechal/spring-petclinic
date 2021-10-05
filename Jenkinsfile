@@ -22,7 +22,7 @@ pipeline {
                 echo "--------Building Sprint-PetClinic application---------------------"
                 echo "TAG= ${BRANCH_NAME}_${BUILD_NUMBER}"
                 // echo "M2_HOME = ${M2_HOME}"                               
-//!                sh "'${M2_HOME}/bin/mvn' package"
+                sh "'${M2_HOME}/bin/mvn' package"
             }
         }
         stage('Create Artifact'){
@@ -34,21 +34,20 @@ pipeline {
                 echo "--------Push Docker Image to ECR---------------"
                 script {
                     docker.withRegistry("https://${AWS_ACCOUNT_ID}.${AWS_ECR_URL}", "ecr:${AWS_ECR_REGION}:AWS_ECR") {
-//!                        sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BRANCH_NAME}_${BUILD_NUMBER}"
+                        sh "docker push ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BRANCH_NAME}_${BUILD_NUMBER}"
                     }
                 }
                 echo "--------Remove Local Docker Image -------------------"
-//!                sh "docker rmi -f ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BRANCH_NAME}_${BUILD_NUMBER}"
+                sh "docker rmi -f ${AWS_ACCOUNT_ID}.${AWS_ECR_URL}/${APPLICATION_NAME}:${BRANCH_NAME}_${BUILD_NUMBER}"
             }
         }        
         stage('Deploy in ECS') {
             when { expression { BRANCH_NAME == 'dev' || BRANCH_NAME == 'main' } }
             steps {
                 echo "--------Deploying Docker Image from ECR to ECS cluster-----------------"
-                build job: 'Tect param out', parameters: [                                     
-//!!!                build job: 'Spring Pet Clinic - Deploy', parameters: [                                     
+                build job: 'Spring Pet Clinic - Deploy', parameters: [                                     
                     string(name: 'selected_image', value: "${BRANCH_NAME}_${BUILD_NUMBER}"),
-                    string(name: 'AWS_ECS_CLUSTER', value: "pet-${BRANCH_NAME}-cluster")
+                    string(name: 'ecs_cluster', value: "pet-${BRANCH_NAME}-cluster")
                 ]
             }
         }               
