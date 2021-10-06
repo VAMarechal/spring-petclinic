@@ -1,5 +1,6 @@
 # base image
 FROM ubuntu:16.04
+# FROM suranagivinod/openjdk8
 
 # install openjdk-8-jdk
 RUN apt-get update && \
