@@ -39,9 +39,8 @@ pipeline {
                         echo "ENVIRONMENT = '${params.ENVIRONMENT}'"
                         echo "AWS_ECR_CLUSTER = '${AWS_ECR_CLUSTER}'"
                         echo "AWS_ECR_SERVICE = '${AWS_ECR_SERVICE}'"
-                         sh "ansible-playbook deploy.yml --extra-vars \'{\"env\":\"prod\",\"image\":\"hello-world\"}"
 //                        ansiblePlaybook becomeUser: 'jenkins', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
-                      //  ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'{env:prod,image:hello-world}\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
+                      //  ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'{\"env\":\"prod\",\"image\":\"hello-world\"}\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
 //                  deploy.yml -i ecs/hosts.txt {"env":"prod","image":"hello-world"}
 // ansible-playbook deploy.yml --extra-vars '{"env":"prod","image":"hello-world"}'
                     
