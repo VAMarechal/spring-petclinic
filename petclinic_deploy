@@ -16,9 +16,11 @@ pipeline {
             steps {
                 echo "--------Deploying Docker Image from ECR to ECS cluster-----------------"
                 withAWS(credentials:'AWS_ECR') {
-                
-//                    ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'\"env\":\"qa\",\"image\":\"hello-world\"\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
-//                    ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'\"env\":\"qa\",\"image\":\"313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:dev_35\"\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
+
+                     echo "ENVIRONMENT = '${params.ENVIRONMENT}'"
+                     echo "ENVIRONMENT = '${ENVIRONMENT}'"
+
+                     echo "selected_image = '${params.selected_image}'"
 
                       ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars "env":"qa","image":"313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:dev_35"', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
 
@@ -27,17 +29,6 @@ pipeline {
                     script {
                         echo "ENVIRONMENT = '${params.ENVIRONMENT}'"
                         echo "selected_image = '${params.selected_image}'"
-//                        ansiblePlaybook becomeUser: 'jenkins', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
-//                       ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'\"env\":\"'${params.ENVIRONMENT}'\",\"image\":\"hello-world\"\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
-
-
-
-
-//                        ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'\"env\":\"prod\",\"image\":\"hello-world\"\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
-//                  deploy.yml -i ecs/hosts.txt {"env":"prod","image":"hello-world"}
-// ansible-playbook deploy.yml --extra-vars '{"env":"prod","image":"hello-world"}'
-// "version=1.23.45 other_variable=foo"
-                    
                     }
                 }
             }
