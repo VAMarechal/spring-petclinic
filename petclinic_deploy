@@ -20,7 +20,7 @@ pipeline {
                         echo "ENVIRONMENT = '${params.ENVIRONMENT}'"
                         echo "selected_image = '${params.selected_image}'"
 //                        ansiblePlaybook becomeUser: 'jenkins', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
-                       ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'\"env\":\"\'${params.ENVIRONMENT}\'\",\"image\":\"hello-world\"\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
+                       ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'\"env\":\"'${params.ENVIRONMENT}'\",\"image\":\"hello-world\"\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
 
 
 
