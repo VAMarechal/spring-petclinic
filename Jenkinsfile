@@ -8,7 +8,6 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
      environment {
-         BRANCH_NAME = 'dev'
          ENVIRONMENT = 'qa'
          APPLICATION_NAME = 'spring_petclinic'
          AWS_ACCOUNT_ID = '313583066119'
