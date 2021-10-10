@@ -20,7 +20,6 @@
       ecs_taskdefinition:
         family: "{{ family }}"
         execution_role_arn: arn:aws:iam::313583066119:role/petclinic-{{ env }}ECSTasksServiceRole
-# arn:aws:iam::313583066119:role/ecsTaskExecutionRole        
         task_role_arn: arn:aws:iam::313583066119:role/ecsTaskExecutionRole #
         containers:
         - name: "{{ container }}"
