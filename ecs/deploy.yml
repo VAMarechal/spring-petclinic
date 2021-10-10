@@ -12,14 +12,16 @@
     cluster_name: pet-{{ env }}-cluster
     service_name: pet-{{ env }}-Service
     task_target_group_control_api: pet-{{ env }}-alb
+    awslogs_group: petclinic-{{ env }}
     
   tasks:
 # Create task definition
     - name: Create task definition
       ecs_taskdefinition:
         family: "{{ family }}"
-        execution_role_arn: arn:aws:iam::313583066119:role/ecsTaskExecutionRole
-        task_role_arn: arn:aws:iam::313583066119:role/ecsTaskExecutionRole
+        execution_role_arn: arn:aws:iam::313583066119:role/petclinic-{{ env }}ECSTasksServiceRole
+# arn:aws:iam::313583066119:role/ecsTaskExecutionRole        
+        task_role_arn: arn:aws:iam::313583066119:role/ecsTaskExecutionRole #
         containers:
         - name: "{{ container }}"
           essential: true
@@ -28,14 +30,12 @@
           - containerPort: 8080
             hostPort:      8080
             protocol: tcp
-          
           logConfiguration:
             logDriver: awslogs
             options:
-              awslogs-group: petclinic
+              awslogs-group: "{{ awslogs_group }}"
               awslogs-region: us-east-2
               awslogs-stream-prefix: fargate
-               
         launch_type: FARGATE
         cpu: '256'
         memory: '512'
