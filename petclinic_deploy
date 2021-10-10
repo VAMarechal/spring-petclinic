@@ -7,10 +7,8 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
     parameters {
-        // string(name: 'Environment', defaultValue: 'qa', trim: true)
         choice(name: 'ENVIRONMENT', choices: ['qa', 'prod'])
     }
-    
     stages {
         stage('Deploy in ECS') {
             steps {
@@ -22,7 +20,7 @@ pipeline {
                      echo "selected_image = '${params.selected_image}'"
                      
                     //  ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars "env":"'${ENVIRONMENT}'","image":"'${params.selected_image}'"', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
-                    ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars "env":"'${ENVIRONMENT}'","image":"313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:dev_35"', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
+                    ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars "env":"{'${ENVIRONMENT}'}","image":"313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:dev_35"', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
 
 
                      // ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars "env":"qa","image":"313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:dev_35"', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
