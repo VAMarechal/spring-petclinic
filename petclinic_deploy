@@ -10,22 +10,7 @@ pipeline {
         // string(name: 'Environment', defaultValue: 'qa', trim: true)
         choice(name: 'ENVIRONMENT', choices: ['qa', 'prod'])
     }
-    environment {
-        AWS_ECR_CLUSTER = "pet-${params.ENVIRONMENT}-cluster"
-        AWS_ECR_SERVICE = "pet-${params.ENVIRONMENT}-Service"
-
-        AWS_ECS_TASK_DEFINITION  = 'petclinic'
-        APPLICATION_NAME = 'spring_petclinic'
-        AWS_ACCOUNT_ID = '313583066119'
-        AWS_ECR_URL = 'dkr.ecr.us-east-2.amazonaws.com'
-        AWS_ECS_EXECUTION_ROLE = 'arn:aws:iam::313583066119:role/ecsTaskExecutionRole'
-        AWS_ECR_REGION = 'us-east-2'
-        AWS_ECS_COMPATIBILITY = 'FARGATE'
-        AWS_ECS_NETWORK_MODE = 'awsvpc'
-        AWS_ECS_CPU = '256'
-        AWS_ECS_MEMORY = '512'
-        AWS_ECS_TASK_DEFINITION_PATH = './ecs/container-definition-update-image.json'
-    }
+    
     stages {
         stage('Deploy in ECS') {
             steps {
@@ -37,7 +22,7 @@ pipeline {
                         echo "AWS_ECR_CLUSTER = '${AWS_ECR_CLUSTER}'"
                         echo "AWS_ECR_SERVICE = '${AWS_ECR_SERVICE}'"
 //                        ansiblePlaybook becomeUser: 'jenkins', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
-                       ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'\"env\":\"'${params.ENVIRONMENT}'\",\"image\":\"hello-world\"\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
+                       ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'\"env\":\"\'${params.ENVIRONMENT}\'\",\"image\":\"hello-world\"\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
 
 
 
