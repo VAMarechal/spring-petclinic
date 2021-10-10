@@ -37,7 +37,7 @@ pipeline {
                         echo "AWS_ECR_CLUSTER = '${AWS_ECR_CLUSTER}'"
                         echo "AWS_ECR_SERVICE = '${AWS_ECR_SERVICE}'"
 //                        ansiblePlaybook becomeUser: 'jenkins', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
-                        ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'\"env\":'${params.ENVIRONMENT}',\"image\":\"hello-world\"\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
+                       // ansiblePlaybook becomeUser: 'jenkins', extras: '--extra-vars \'\"env\":'${params.ENVIRONMENT}',\"image\":\"hello-world\"\'', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
 
 
 
