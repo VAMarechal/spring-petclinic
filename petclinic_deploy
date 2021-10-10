@@ -31,8 +31,8 @@ pipeline {
             steps {
                 echo "--------Deploying Docker Image from ECR to ECS cluster-----------------"
                 
-                 echo "AWS_ECR_CLUSTER = ${AWS_ECR_CLUSTER}" 
-                 echo "AWS_ECR_SERVICE = ${AWS_ECR_SERVICE}"
+                 echo "ENVIRONMENT = ${params.ENVIRONMENT}" 
+                 echo "selected_image = ${params.selected_image}"
                 
                 withAWS(credentials:'AWS_ECR') {
                     script {
