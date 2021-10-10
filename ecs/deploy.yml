@@ -1,0 +1,79 @@
+---
+- name: Deploy ECS task definition and service
+  hosts: localhost
+  vars:
+    ansible_python_interpreter: /usr/bin/python
+# ansible-playbook deploy.yml --extra-vars '{"env":"prod","image":"hello-world"}'
+    env: qa
+    image: nginx 
+#    313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:dev_35
+    family: petclinic
+    container: petclinic
+    cluster_name: pet-{{ env }}-cluster
+    service_name: pet-{{ env }}-Service
+    task_target_group_control_api: pet-{{ env }}-alb
+    
+  tasks:
+# Create task definition
+    - name: Create task definition
+      ecs_taskdefinition:
+        family: "{{ family }}"
+        execution_role_arn: arn:aws:iam::313583066119:role/ecsTaskExecutionRole
+        task_role_arn: arn:aws:iam::313583066119:role/ecsTaskExecutionRole
+        containers:
+        - name: "{{ container }}"
+          essential: true
+          image: "{{image}}"
+          portMappings:
+          - containerPort: 8080
+            hostPort:      8080
+            protocol: tcp
+          
+          logConfiguration:
+            logDriver: awslogs
+            options:
+              awslogs-group: petclinicDev
+              awslogs-region: us-east-2
+              awslogs-stream-prefix: fargate
+               
+        launch_type: FARGATE
+        cpu: '256'
+        memory: '512'
+        state: present
+        network_mode: awsvpc
+      register: task_output
+
+# Describe service
+    - ecs_service_info:
+        cluster: "{{ cluster_name }}"
+        service: "{{ service_name }}"
+        details: true
+      register: service_info
+      
+    - name: Serviceo bject
+      set_fact:
+        service_obj: "{{ service_info.services  | selectattr('serviceName', 'equalto', service_name) | first }}"
+
+    - name: Deployments
+      set_fact:        
+        deployments: "{{ service_obj.deployments[0] }}"
+
+# Create service
+    - name: Create ECS service
+      ecs_service:
+        state: present
+        name: "{{ service_name }}"
+        cluster: "{{ cluster_name }}"
+        region: us-east-2
+        launch_type: FARGATE
+        task_definition: "{{ task_output.taskdefinition[\"family\"] }}:{{ task_output.taskdefinition[\"revision\"] }}"
+        desired_count: 1
+        network_configuration:
+          assign_public_ip: true
+          security_groups: "{{ deployments.networkConfiguration.awsvpcConfiguration.securityGroups }}"
+          subnets: "{{ deployments.networkConfiguration.awsvpcConfiguration.subnets }}" 
+        load_balancers:
+          - targetGroupArn: "{{ service_obj.loadBalancers[0].targetGroupArn }}" 
+            containerName: "{{ container }}"
+            containerPort: 8080
+      register: "ecs_service"
