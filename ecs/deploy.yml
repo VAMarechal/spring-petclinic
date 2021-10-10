@@ -5,7 +5,8 @@
     ansible_python_interpreter: /usr/bin/python
 # ansible-playbook deploy.yml --extra-vars '{"env":"prod","image":"hello-world"}'
     env: qa
-    image: 313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:dev_35
+    image: hello-world
+#    313583066119.dkr.ecr.us-east-2.amazonaws.com/spring_petclinic:dev_35
     family: petclinic
     container: petclinic
     cluster_name: pet-{{ env }}-cluster
