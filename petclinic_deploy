@@ -7,12 +7,12 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
     parameters {
-        string(name: 'branch_name', defaultValue: 'dev', trim: true)
-    }
-     environment {
-        AWS_ECR_CLUSTER = 'pet-${branch_name}-cluster'
-        AWS_ECR_SERVICE = 'pet-${branch_name}-Service'
-        // params.
+        // string(name: 'Environment', defaultValue: 'qa', trim: true)
+        choice(name: 'ENVIRONMENT', choices: ['qa', 'prod'])
+    environment {
+        AWS_ECR_CLUSTER = "pet-${params.ENVIRONMENT}-cluster"
+        AWS_ECR_SERVICE = "pet-${params.ENVIRONMENT}-Service"
+
         AWS_ECS_TASK_DEFINITION  = 'petclinic'
         APPLICATION_NAME = 'spring_petclinic'
         AWS_ACCOUNT_ID = '313583066119'
@@ -35,16 +35,23 @@ pipeline {
                 
                 withAWS(credentials:'AWS_ECR') {
                     script {
-                        updateContainerDefinitionJsonWithImageVersion()
-                        echo "Registering ECS Task Definition"
-                        sh("/usr/bin/aws ecs register-task-definition --region ${AWS_ECR_REGION} --family ${AWS_ECS_TASK_DEFINITION} --execution-role-arn ${AWS_ECS_EXECUTION_ROLE} --requires-compatibilities ${AWS_ECS_COMPATIBILITY} --network-mode ${AWS_ECS_NETWORK_MODE} --cpu ${AWS_ECS_CPU} --memory ${AWS_ECS_MEMORY} --container-definitions file://${AWS_ECS_TASK_DEFINITION_PATH}")
-                          
-                        echo "Describing ECS Task Definition"
-                        def taskRevision = sh(script: "/usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION} --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/.\$//'", returnStdout: true)
+                        echo "ENVIRONMENT = '${params.ENVIRONMENT}'"
+                        echo "AWS_ECR_CLUSTER = '${AWS_ECR_CLUSTER}'"
+                        echo "AWS_ECR_SERVICE = '${AWS_ECR_SERVICE}'"
                         
-                        echo "Updating ECS Service"
-                        sh("/usr/bin/aws ecs update-service --cluster ${AWS_ECR_CLUSTER} --service ${AWS_ECR_SERVICE} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
-                        echo "Completed"
+                        ansiblePlaybook becomeUser: 'jenkins', installation: 'Ansible', inventory: 'ecs/hosts.txt', playbook: 'ecs/deploy.yml'
+
+                    
+//                        updateContainerDefinitionJsonWithImageVersion()
+//                        echo "Registering ECS Task Definition"
+//                        sh("/usr/bin/aws ecs register-task-definition --region ${AWS_ECR_REGION} --family ${AWS_ECS_TASK_DEFINITION} --execution-role-arn ${AWS_ECS_EXECUTION_ROLE} --requires-compatibilities ${AWS_ECS_COMPATIBILITY} --network-mode ${AWS_ECS_NETWORK_MODE} --cpu ${AWS_ECS_CPU} --memory ${AWS_ECS_MEMORY} --container-definitions file://${AWS_ECS_TASK_DEFINITION_PATH}")
+//                          
+//                        echo "Describing ECS Task Definition"
+//                        def taskRevision = sh(script: "/usr/bin/aws ecs describe-task-definition --task-definition ${AWS_ECS_TASK_DEFINITION} --region ${AWS_ECR_REGION} | egrep \"revision\" | tr \"/\" \" \" | awk '{print \$2}' | sed 's/.\$//'", returnStdout: true)
+//                        
+//                        echo "Updating ECS Service"
+//                        sh("/usr/bin/aws ecs update-service --cluster ${AWS_ECR_CLUSTER} --service ${AWS_ECR_SERVICE} --region ${AWS_ECR_REGION} --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}")
+//                        echo "Completed"
                     }
                 }
             }
