@@ -70,10 +70,10 @@
         desired_count: 1
         network_configuration:
           assign_public_ip: true
-          security_groups: "{{ deployments.networkConfiguration.awsvpcConfiguration.securityGroups }}"
-          subnets: "{{ deployments.networkConfiguration.awsvpcConfiguration.subnets }}" 
+          security_groups: "{{ service_info.services[0].deployments[0].networkConfiguration.awsvpcConfiguration.securityGroups }}"
+          subnets: "{{ service_info.services[0].deployments[0].networkConfiguration.awsvpcConfiguration.subnets }}" 
         load_balancers:
-          - targetGroupArn: "{{ service_obj.loadBalancers[0].targetGroupArn }}" 
+          - targetGroupArn: "{{ service_info.services[0].loadBalancers[0].targetGroupArn }}" 
             containerName: "{{ container }}"
             containerPort: 8080
       register: "ecs_service"
